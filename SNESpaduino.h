@@ -24,16 +24,32 @@
 #define BTN_L 0x400
 #define BTN_R 0x800
 
+#define MAX_PADS 4
+
 #include "Arduino.h"
+
+class SNESpad
+{
+	public:
+		SNESpad(byte data);
+		uint16_t getButtons(boolean return_inverted = true);
+		void reset();
+		void read(int i);
+		byte getDataPin();
+	private:
+		byte PIN_DATA;
+		uint16_t state;
+};
 
 class SNESpaduino
 {
 	public:
-		SNESpaduino(byte latch, byte clock, byte data);
-		uint16_t getButtons(boolean return_inverted = true);
+		SNESpaduino(byte latch, byte clock);
+		void addPad(SNESpad* pad);
+		void read();
 	private:
-		uint16_t state;
-		byte i, PIN_LATCH, PIN_CLOCK, PIN_DATA;
+		byte i, PIN_LATCH, PIN_CLOCK, padCount;
+		SNESpad* pads[MAX_PADS];
 };
 
 #endif
